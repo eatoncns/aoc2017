@@ -1,9 +1,9 @@
 module Main where
 
 import System.Environment
-import Lib (distance)
+import Lib (firstLarger)
 
 main :: IO ()
 main = do
   args <- getArgs
-  (print . distance . read . head) args
+  (print . firstLarger . read . head) args

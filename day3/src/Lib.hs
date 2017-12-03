@@ -1,31 +1,48 @@
 -- | A library to do stuff.
 module Lib
-    --(
-    --  distance
-    --) where
-    where
+    (
+      firstLarger
+    ) where
 
-import Data.List
-import Data.Maybe
+import qualified Data.Map.Strict as Map
 
-distance :: Int -> Int
-distance input = ring + distanceToCentreLine input ring
-  where ring = calculateRing input
+data Direction = R | U | L | D
+type Coordinate = (Int, Int)
 
-calculateRing :: Int -> Int
-calculateRing input = fromJust (findIndex (\n -> n >= input) ringBounds)
+path :: [Direction]
+path = concat $ zipWith replicate stepSizes directions
 
-distanceToCentreLine :: Int -> Int -> Int
-distanceToCentreLine _ 0 = 0
-distanceToCentreLine input ring = minimum (map (distanceTo input) (centreLines ring))
+stepSizes :: [Int]
+stepSizes = concatMap (replicate 2) [1..]
 
-distanceTo :: Int -> Int -> Int
-distanceTo input centreLine = abs (input - centreLine)
+directions :: [Direction]
+directions = cycle [R, U, L, D]
 
-centreLines :: Int -> [Int]
-centreLines ring = take 4 [firstCentre, (firstCentre + next)..]
-  where firstCentre = (ringBounds !! (ring - 1)) + ring
-        next = ring * 2
+firstLarger :: Int -> Int
+firstLarger input = firstLarger' input (0, 0) (Map.singleton (0, 0) 1) path
 
-ringBounds :: [Int]
-ringBounds = [x*x | x <- [1, 3..]]
+firstLarger' :: Int -> Coordinate -> Map.Map Coordinate Int -> [Direction] -> Int
+firstLarger' input current memo dirs =
+  if nextValue > input
+    then nextValue
+    else firstLarger' input next (Map.insert next nextValue memo) (tail dirs)
+  where
+    next = move current (head dirs)
+    nextValue = valueOf next memo
+
+move :: Coordinate -> Direction -> Coordinate
+move (x, y) direction =
+  case direction of
+    R -> (x + 1, y)
+    U -> (x, y + 1)
+    L -> (x - 1, y)
+    D -> (x, y - 1)
+
+valueOf :: Coordinate -> Map.Map Coordinate Int -> Int
+valueOf coord memo = sum (map (lookupValue memo) (adjacents coord))
+
+lookupValue :: Map.Map Coordinate Int -> Coordinate -> Int
+lookupValue memo coordinate = Map.findWithDefault 0 coordinate memo
+
+adjacents :: Coordinate -> [Coordinate]
+adjacents (x, y) = [(x + x', y + y') | x' <- [-1..1], y' <- [-1..1], (x', y') /= (0, 0)]
