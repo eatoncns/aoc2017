@@ -8,10 +8,14 @@ main :: IO ()
 main = hspec spec
 
 
-exampleData = ["aa bb cc dd ee", "aa bb cc dd aa", "aa bb cc dd aaa"]
+exampleData = ["abcde fghi",
+               "abcde xyz ecdab",
+               "a ab abc abd abf abj",
+               "iiii oiii ooii oooi oooo",
+               "oiii ioii iioi iiio"]
 
 spec :: Spec
 spec =
   describe "countValid" $ do
     it "returns correct result for example data" $ do
-      countValid exampleData `shouldBe` 2
+      countValid exampleData `shouldBe` 3

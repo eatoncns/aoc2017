@@ -5,9 +5,10 @@ module Lib
     ) where
 
 import Data.List.Unique
+import Data.List
 
 countValid :: [String] -> Int
 countValid inputLines = length (filter isValid inputLines)
 
 isValid :: String -> Bool
-isValid line = (allUnique . words) line
+isValid line = (allUnique . (map sort) . words) line
