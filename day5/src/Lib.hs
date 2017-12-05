@@ -17,5 +17,6 @@ stepsToExit' jumps currentIndex steps =
     stepsToExit' updatedJumps nextIndex (steps + 1)
   where
     jump = S.index jumps currentIndex
-    updatedJumps = S.update currentIndex (jump + 1) jumps
+    jumpUpdate = if jump >= 3 then -1 else 1
+    updatedJumps = S.update currentIndex (jump + jumpUpdate) jumps
     nextIndex = currentIndex + jump
