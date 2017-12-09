@@ -2,7 +2,7 @@ module LibSpec where
 
 import Test.Hspec
 
-import Lib (bottomProgram)
+import Lib (unbalancedNodes)
 
 main :: IO ()
 main = hspec spec
@@ -24,6 +24,6 @@ exampleInput = ["pbga (66)"
 
 spec :: Spec
 spec =
-  describe "bottomProgram" $ do
+  describe "unbalancedNodes" $ do
     it "returns correct result for example input" $ do
-      bottomProgram exampleInput `shouldBe` "tknk"
+      unbalancedNodes exampleInput `shouldBe` ["ugml", "padx", "fwft"]

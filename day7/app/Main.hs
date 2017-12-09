@@ -1,10 +1,10 @@
 module Main where
 
 import System.Environment
-import Lib (bottomProgram)
+import Lib (unbalancedNodes)
 
 main :: IO ()
 main = do
   args <- getArgs
   input <- readFile (head args)
-  print . bottomProgram .lines $ input
+  print . unbalancedNodes .lines $ input
