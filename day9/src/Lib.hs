@@ -1,20 +1,13 @@
 -- | A library to do stuff.
 module Lib where
 
-score :: String -> Int
-score = score' 0 0
+garbageCount :: String -> Int
+garbageCount = garbageCount' 0 False
 
-score' :: Int -> Int -> String -> Int
-score' total _ [] = total
-score' total depth (x : xs) =
-  case x of
-    '{' -> score' total (depth + 1) xs
-    '}' -> score' (total + depth) (depth -1) xs
-    '<' -> score' total depth (skipGarbage xs)
-    _   -> score' total depth xs
-
-skipGarbage :: String -> String
-skipGarbage [] = []
-skipGarbage ('!' : _ : xs) = skipGarbage xs
-skipGarbage ('>' : xs) = xs
-skipGarbage (_ : xs) = skipGarbage xs
+garbageCount' :: Int -> Bool -> String -> Int
+garbageCount' count _ [] = count
+garbageCount' count False ('<' : xs) = garbageCount' count True xs
+garbageCount' count False (_ : xs) = garbageCount' count False xs
+garbageCount' count True ('!' : _ : xs) = garbageCount' count True xs
+garbageCount' count True ('>' : xs) = garbageCount' count False xs
+garbageCount' count True (_ : xs) = garbageCount' (count + 1) True xs
